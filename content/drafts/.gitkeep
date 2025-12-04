@@ -1,0 +1,18 @@
+# Drafts Directory
+
+This directory is for work-in-progress blog posts and content.
+
+Files in this directory are gitignored and won't be pushed to the public repository,
+but they will still be visible when running `hugo server` locally.
+
+To publish a draft:
+1. Move the file from `content/drafts/` to the appropriate section (e.g., `content/posts/`)
+2. Set `draft: false` in the front matter (or remove the draft line)
+3. Commit and push
+
+## Creating a new draft
+
+```bash
+# Create a new draft post
+hugo new drafts/my-new-post.md
+```

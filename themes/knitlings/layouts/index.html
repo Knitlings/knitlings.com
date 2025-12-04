@@ -1,0 +1,209 @@
+{{ define "main" }}
+<!-- SVG filter for distressed text effect -->
+<svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+    <defs>
+        <filter id="distressed" x="-50%" y="-50%" width="200%" height="200%">
+            <feTurbulence type="turbulence" baseFrequency="0.15" numOctaves="2" result="turbulence" seed="4"/>
+            <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="1" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+            <feMorphology operator="dilate" radius="0.2" in="displaced" result="eroded"/>
+        </filter>
+    </defs>
+</svg>
+
+<div class="page-wrapper" id="pageWrapper">
+    <section class="hero-splash page">
+        <div class="frame-borders"></div>
+        <div class="hero-content">
+            <div class="hero-image-wrapper">
+                <div class="hero-background-image"></div>
+                <h1 class="hero-title">{{ .Site.Title }}</h1>
+            </div>
+            {{ with .Site.Params.description }}
+            <p class="hero-description">{{ . }}</p>
+            {{ end }}
+        </div>
+    </section>
+
+    <section class="tools-section page">
+        <div class="frame-borders"></div>
+        <div class="section-container">
+            <header class="section-header">
+                <h2><a href="{{ "tools" | relURL }}">Tools</a></h2>
+            </header>
+
+            <div class="tools-grid tools-grid-single">
+                <article class="tool-card">
+                    <div class="tool-image">
+                        <img src="{{ "images/motif-screenshot.png" | relURL }}" alt="Motif Pattern Generator">
+                    </div>
+                    <span class="figure-label">fig. 1</span>
+                    <div class="tool-content">
+                        <h3 class="tool-title">
+                            <a href="https://motif.works" target="_blank" rel="noopener">Motif</a>
+                        </h3>
+                        <p class="tool-description">
+                           A free, open-source web tool for creating grid-based repeating patterns. <a href="{{ "tools/motif" | relURL }}">Learn more →</a>
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    {{/* <section class="tools-section page">
+        <div class="frame-borders"></div>
+        <div class="section-container">
+            <header class="section-header">
+                <div class="blog-banner"></div>
+                <h2 style="--chapter-num: '2. ';"><a href="{{ "posts" | relURL }}">Blog</a></h2>
+            </header>
+
+            <div class="section-content">
+                <p>Writings about knitting, tools, and making.</p>
+            </div>
+        </div>
+    </section> */}}
+
+    <section class="tools-section page">
+        <div class="frame-borders"></div>
+        <div class="section-container">
+            <header class="section-header">
+                <div class="updates-banner"></div>
+                <h2 style="--chapter-num: '2. ';"><a href="{{ "updates" | relURL }}">Updates</a></h2>
+            </header>
+
+            <div class="section-content">
+                <p>Changelogs and announcements when new tools launch or existing ones improve.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tools-section page">
+        <div class="frame-borders"></div>
+        <div class="section-container">
+            <header class="section-header">
+                <div class="about-banner"></div>
+                <h2 style="--chapter-num: '3. ';"><a href="{{ "about" | relURL }}">About</a></h2>
+            </header>
+
+            <div class="section-content">
+                {{ with .Site.GetPage "about.md" }}
+                    <p>I've been knitting for 20 years and I've developed tools for knitters for a good week or two now. These tools came to exist because I needed them and couldn't find what I wanted.</p>
+                    <p><a href="{{ .RelPermalink }}">Read more →</a></p>
+                {{ end }}
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Page Navigation -->
+<nav class="page-nav">
+    <button class="page-nav-btn" id="prevBtn" aria-label="Previous page">‹</button>
+    <span class="page-counter" id="pageCounter">page 1</span>
+    <button class="page-nav-btn" id="nextBtn" aria-label="Next page">›</button>
+</nav>
+
+<script>
+(function() {
+    const wrapper = document.getElementById('pageWrapper');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('pageCounter');
+    const totalPages = wrapper.querySelectorAll('.page').length;
+    let currentPage = 0;
+    let wheelListener = null;
+
+    // Check if we should use mobile-style vertical scrolling
+    // Matches the CSS media query: (max-width: 1023px) and portrait, OR (max-height: 599px) and landscape and (max-width: 1023px)
+    function isMobile() {
+        const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+        const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+
+        // Portrait tablets and phones (width <= 1023px)
+        if (window.innerWidth <= 1023 && isPortrait) return true;
+
+        // Landscape phones (height < 600px, width <= 1023px)
+        if (window.innerHeight < 600 && isLandscape && window.innerWidth <= 1023) return true;
+
+        return false;
+    }
+
+    function updatePage() {
+        // Only apply horizontal scroll on desktop
+        if (!isMobile()) {
+            const sidebarWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width'));
+            // Use clientWidth instead of innerWidth to respect viewport (important for dev tools emulation)
+            const viewportWidth = document.documentElement.clientWidth;
+            const pageWidth = viewportWidth - sidebarWidth;
+            wrapper.style.transform = `translateX(-${currentPage * pageWidth}px)`;
+            counter.textContent = `page ${currentPage + 1}`;
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === totalPages - 1;
+        } else {
+            // On mobile, clear any transform
+            wrapper.style.transform = 'none';
+        }
+    }
+
+    function setupWheelNavigation() {
+        // Remove existing listener if any
+        if (wheelListener) {
+            wrapper.parentElement.removeEventListener('wheel', wheelListener);
+            wheelListener = null;
+        }
+
+        // Only add wheel navigation on desktop
+        if (!isMobile()) {
+            let scrollTimeout;
+            wheelListener = function(e) {
+                e.preventDefault();
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    if (e.deltaY > 0 && currentPage < totalPages - 1) {
+                        currentPage++;
+                        updatePage();
+                    } else if (e.deltaY < 0 && currentPage > 0) {
+                        currentPage--;
+                        updatePage();
+                    }
+                }, 50);
+            };
+            wrapper.parentElement.addEventListener('wheel', wheelListener, { passive: false });
+        }
+    }
+
+    // Only set up button listeners on desktop
+    if (prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 0 && !isMobile()) {
+                currentPage--;
+                updatePage();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages - 1 && !isMobile()) {
+                currentPage++;
+                updatePage();
+            }
+        });
+    }
+
+    // Handle window resize - reinitialize on breakpoint change
+    let wasMobile = isMobile();
+    window.addEventListener('resize', () => {
+        const nowMobile = isMobile();
+        if (wasMobile !== nowMobile) {
+            // Breakpoint changed, reinitialize
+            currentPage = 0;
+            setupWheelNavigation();
+            wasMobile = nowMobile;
+        }
+        updatePage();
+    });
+
+    setupWheelNavigation();
+    updatePage();
+})();
+</script>
+{{ end }}

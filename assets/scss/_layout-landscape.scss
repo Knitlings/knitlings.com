@@ -1,0 +1,139 @@
+/* Landscape mobile - additional compact adjustments for very small landscape screens */
+/* This adds extra space-saving tweaks beyond the main mobile layout */
+@media (max-height: 450px) and (orientation: landscape) {
+    :root {
+        /* Match small mobile spacing values for consistent header height */
+        --space-xs: 0.25rem;
+        --space-sm: 0.625rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-xxl: 2.5rem;
+    }
+
+    .site-header {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    /* Make hamburger menu icon smaller */
+    .mobile-menu-toggle {
+        padding: 0;
+        gap: 3px;
+    }
+
+    .hamburger-line {
+        width: 20px;
+        height: 2px;
+    }
+
+    .site-logo {
+        font-size: 0.9rem;
+    }
+
+    /* Hide all decorative banners on small landscape screens */
+    .updates-banner,
+    .tools-banner,
+    .about-banner,
+    .blog-banner,
+    .post-lace-banner,
+    .hero-background-image {
+        display: none;
+    }
+
+    /* Scroll-snap for smooth vertical navigation on landscape */
+    .page-container {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .page-wrapper {
+        position: relative;
+        display: block;
+        height: 100vh;
+        height: 100dvh;
+        left: 0;
+        transform: none !important;
+        transition: none;
+        scroll-snap-type: y mandatory;
+        overflow-y: auto;
+        /* Actual padding pushes content below navbar */
+        padding-top: var(--header-height);
+        /* scroll-padding-top helps with snap alignment */
+        scroll-padding-top: var(--header-height);
+    }
+
+    .page,
+    .hero-splash,
+    .tools-section {
+        min-width: 100%;
+        width: 100%;
+        height: calc(100vh - var(--header-height));
+        height: calc(100dvh - var(--header-height));
+        min-height: calc(100vh - var(--header-height));
+        min-height: calc(100dvh - var(--header-height));
+        padding: var(--space-md);
+        scroll-snap-align: start;
+    }
+
+    .page-nav {
+        display: none;
+    }
+
+    /* Reduce hero title size */
+    .hero-title {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+    }
+
+    /* Frame borders - wrapper padding handles navbar */
+    /* Consistent frame width across all page types */
+    .page .frame-borders,
+    .hero-splash .frame-borders,
+    .tools-section .frame-borders,
+    .content-page .frame-borders {
+        top: var(--space-md);
+        left: var(--space-md);
+        right: var(--space-md);
+        bottom: var(--space-md);
+    }
+
+    /* Tighter padding to fit content in frames */
+    .page,
+    .hero-splash,
+    .tools-section {
+        padding: var(--space-md);
+    }
+
+    .section-container {
+        padding: 0 var(--space-xs);
+    }
+
+    .hero-content {
+        padding: 0;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+    }
+
+    .section-content p {
+        font-size: 0.95rem;
+    }
+
+    /* Hide tool image and figure label - insufficient vertical space */
+    .tool-image,
+    .figure-label {
+        display: none;
+    }
+
+    /* Reduce tool title size */
+    .tool-title {
+        font-size: 1.5rem;
+        margin-bottom: var(--space-xs);
+    }
+
+    .tool-description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+}

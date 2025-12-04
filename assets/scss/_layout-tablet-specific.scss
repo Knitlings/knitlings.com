@@ -1,0 +1,22 @@
+/* Tablet - 768px to 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* Single column for posts on tablet too - easier to read */
+    .posts-list,
+    .posts-list:has(.post-item:nth-child(2)) {
+        grid-template-columns: 1fr !important;
+    }
+
+    .posts-list::before,
+    .posts-list:has(.post-item:nth-child(2))::before {
+        display: none !important;
+    }
+}
+
+/* Smaller landscape tablets - adjust hero image for narrower viewports */
+@media (min-width: 1024px) and (max-width: 1400px) and (orientation: landscape) {
+    .hero-background-image {
+        width: 450px;
+        height: 371px;
+        left: -250px;
+    }
+}

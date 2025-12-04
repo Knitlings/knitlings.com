@@ -1,0 +1,10 @@
+baseURL = 'https://knitlings.com/'
+languageCode = 'en-us'
+title = 'Knitlings'
+theme = 'knitlings'
+
+[params]
+description = 'Find tools for knitters'
+
+[markup.goldmark.renderer]
+unsafe = false

@@ -1,0 +1,50 @@
+{{ define "main" }}
+<div class="content-page">
+    <div class="frame-borders"></div>
+    <article class="single-post">
+        <header class="post-header">
+            {{ if eq .Title "About" }}
+            <div class="about-banner"></div>
+            {{ else if eq .Type "posts" }}
+            {{ if .Params.lace }}
+            <div class="post-lace-banner" data-lace="{{ .Params.lace }}"></div>
+            {{ end }}
+            {{ end }}
+
+            {{ if .Params.featured_image }}
+            <div class="featured-image">
+                <img src="{{ .Params.featured_image | relURL }}" alt="{{ .Title }}">
+            </div>
+            <span class="figure-label">fig. 1: {{ .Title }}</span>
+            {{ end }}
+
+            <h1 class="post-title">{{ .Title }}</h1>
+
+            {{ if eq .Type "posts" }}
+            <div class="post-meta">
+                <time datetime="{{ .Date.Format "2006-01-02" }}">
+                    {{ .Date.Format "January 2, 2006" }}
+                </time>
+            </div>
+            {{ end }}
+        </header>
+
+        <div class="post-body">
+            {{ .Content }}
+        </div>
+
+        {{ if eq .Type "posts" }}
+        <footer class="post-footer">
+            <nav class="post-nav">
+                {{ with .NextInSection }}
+                <a href="{{ .RelPermalink }}" class="post-nav-prev">‹ {{ .Title }}</a>
+                {{ end }}
+                {{ with .PrevInSection }}
+                <a href="{{ .RelPermalink }}" class="post-nav-next">{{ .Title }} ›</a>
+                {{ end }}
+            </nav>
+        </footer>
+        {{ end }}
+    </article>
+</div>
+{{ end }}

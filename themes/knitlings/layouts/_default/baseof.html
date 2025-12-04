@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Rosarivo:ital@0;1&family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    {{ $styles := resources.Get "scss/style.scss" }}
+    {{ if $styles }}
+        {{ $styles = $styles | toCSS | minify | fingerprint }}
+        <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}">
+    {{ else }}
+        <!-- Fallback to static CSS -->
+        <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+    {{ end }}
+</head>
+<body>
+    {{ block "header" . }}{{ partial "header.html" . }}{{ end }}
+
+    <main class="main-content">
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    <script>
+        // Tree navigation expand/collapse
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dynamically calculate and set header height as CSS variable for mobile-style layouts
+            function updateHeaderHeight() {
+                const header = document.querySelector('.site-header');
+                const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+                const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+
+                // Calculate header height for:
+                // 1. Portrait tablets/phones (width <= 1023px)
+                // 2. Landscape phones (height < 600px, width <= 1023px)
+                const shouldCalculate =
+                    (window.innerWidth <= 1023 && isPortrait) ||
+                    (window.innerHeight < 600 && isLandscape && window.innerWidth <= 1023);
+
+                if (header && shouldCalculate) {
+                    const headerHeight = header.offsetHeight;
+                    document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+                }
+            }
+
+            // Update on load and resize
+            updateHeaderHeight();
+            window.addEventListener('resize', updateHeaderHeight);
+
+            const navParents = document.querySelectorAll('.nav-parent');
+
+            navParents.forEach(parent => {
+                parent.addEventListener('click', function(e) {
+                    const submenuId = this.getAttribute('data-expand') + '-submenu';
+                    const submenu = document.getElementById(submenuId);
+
+                    if (submenu) {
+                        const isExpanded = submenu.classList.contains('expanded');
+
+                        // If collapsed, expand it (but still allow navigation)
+                        if (!isExpanded) {
+                            this.classList.add('expanded');
+                            submenu.classList.add('expanded');
+                        }
+                        // Always allow navigation - never preventDefault
+                    }
+                });
+            });
+
+            // Auto-expand if on tools page or a tool subpage
+            // Only add classes if they're not already there (from server-side rendering)
+            const currentPath = window.location.pathname;
+
+            if (currentPath.includes('/tools')) {
+                const toolsParent = document.querySelector('[data-expand="tools"]');
+                const toolsSubmenu = document.getElementById('tools-submenu');
+                if (toolsParent && toolsSubmenu) {
+                    // Only add if not already expanded (prevents flicker from re-adding)
+                    if (!toolsParent.classList.contains('expanded')) {
+                        toolsParent.classList.add('expanded');
+                    }
+                    if (!toolsSubmenu.classList.contains('expanded')) {
+                        toolsSubmenu.classList.add('expanded');
+                    }
+                }
+            }
+
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navMenu = document.getElementById('navMenu');
+
+            if (mobileMenuToggle && navMenu) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', !isExpanded);
+                    this.classList.toggle('active');
+                    navMenu.classList.toggle('mobile-open');
+                    document.body.classList.toggle('menu-open');
+                });
+
+                // Close menu when clicking a link
+                const navLinks = navMenu.querySelectorAll('a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                        mobileMenuToggle.classList.remove('active');
+                        navMenu.classList.remove('mobile-open');
+                        document.body.classList.remove('menu-open');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

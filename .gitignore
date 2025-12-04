@@ -1,0 +1,28 @@
+# Hugo generated files
+/public/
+/resources/_gen/
+.hugo_build.lock
+
+# Draft content (local only)
+content/drafts/*
+!content/drafts/.gitkeep
+
+# Claude Code
+CLAUDE.md
+.claude/
+
+# Temporary planning documents
+*_PLAN.md
+SITE_STRUCTURE.md
+screenshot*.png
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

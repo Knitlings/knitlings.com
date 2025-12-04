@@ -1,0 +1,36 @@
+/* CSS Custom Properties - Change these to customize your color scheme! */
+:root {
+    /* Color Palette - Vintage Warm Maximalist */
+    --color-bg: #f5e6e0;
+    --color-text: #2a2a2a;
+    --color-accent: #6F1A07;
+    --color-accent-alt: #706677;
+    --color-border: #e8d4c0;
+    --color-muted: #a67c52;
+
+    /* Typography */
+    --font-serif: 'EB Garamond', 'Garamond', 'Georgia', serif;
+    --font-heading: 'Rosarivo', serif;
+    --font-hero: 'IM Fell English', serif;
+    --font-sidebar: 'IBM Plex Mono', 'Courier New', 'Courier', monospace;
+
+    /* Spacing */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2rem;
+    --space-xl: 2.5rem;
+    --space-xxl: 3rem;
+
+    /* Borders */
+    --border-thin: 1px;
+    --border-medium: 2px;
+    --border-thick: 3px;
+
+    /* Max widths */
+    --width-content: 75ch;
+    --width-wide: 80rem;
+
+    /* Layout dimensions */
+    --sidebar-width: 200px;
+}

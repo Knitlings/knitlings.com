@@ -1,0 +1,22 @@
+{{- $isToolsPage := or (eq .Section "tools") (strings.HasPrefix .RelPermalink "/tools/") -}}
+<header class="site-header">
+    <nav class="site-nav">
+        <a href="{{ "/" | relURL }}" class="site-logo">knitlings</a>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <ul class="nav-menu nav-tree" id="navMenu">
+            <li class="nav-item">
+                <a href="{{ "tools" | relURL }}" class="nav-link nav-parent{{ if $isToolsPage }} expanded{{ end }}" data-expand="tools">tools</a>
+                <ul class="nav-submenu{{ if $isToolsPage }} expanded{{ end }}" id="tools-submenu">
+                    <li class="nav-subitem"><a href="{{ "tools/motif" | relURL }}" class="nav-link">motif</a></li>
+                </ul>
+            </li>
+            {{/* <li class="nav-item"><a href="{{ "posts" | relURL }}" class="nav-link">blog</a></li> */}}
+            <li class="nav-item"><a href="{{ "updates" | relURL }}" class="nav-link">updates</a></li>
+            <li class="nav-item"><a href="{{ "about" | relURL }}" class="nav-link">about</a></li>
+        </ul>
+    </nav>
+</header>

@@ -1,0 +1,36 @@
+{{ define "main" }}
+<div class="content-page">
+    <div class="frame-borders"></div>
+    <div class="list-page">
+        <header class="list-header">
+            {{ if eq .Section "updates" }}
+            <div class="updates-banner"></div>
+            {{ else if eq .Section "tools" }}
+            <div class="tools-banner"></div>
+            {{ else if eq .Section "posts" }}
+            <div class="blog-banner"></div>
+            {{ end }}
+            <h1>{{ .Title }}</h1>
+            {{ with .Content }}
+            <div class="list-description">
+                {{ . }}
+            </div>
+            {{ end }}
+        </header>
+
+        <div class="posts-list">
+            {{ range .Pages }}
+            <article class="post-item">
+                {{ if eq .Type "posts" }}
+                <time class="post-date">{{ .Date.Format "January 2, 2006" }}</time>
+                {{ end }}
+                <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+                {{ with .Summary }}
+                <div class="post-excerpt">{{ . }}</div>
+                {{ end }}
+            </article>
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{ end }}
